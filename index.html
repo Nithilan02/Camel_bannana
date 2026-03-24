@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Camel-Banana Puzzle Game</title>
+    <meta name="description" content="Interactive visualization of the classic Camel-Banana transportation optimization puzzle. Watch the optimal strategy unfold with smooth animations.">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="app-container">
+    <header>
+        <h1>🐪 Camel-Banana Puzzle</h1>
+        <div class="mute-btn-wrapper">
+            <button id="btn-mute" class="btn-outline" style="padding: 8px 12px;">🔊 Sound</button>
+        </div>
+    </header>
+
+    <div class="canvas-container" id="canvas-container">
+        <canvas id="gameCanvas"></canvas>
+        <div id="progress-bar-container">
+            <div id="progress-bar"></div>
+        </div>
+    </div>
+
+    <!-- Error toast -->
+    <div id="error-toast" class="error-toast"></div>
+
+    <div class="controls-panel">
+        <!-- Settings -->
+        <div class="panel settings">
+            <h3>⚙️ Configuration</h3>
+            <div class="form-group">
+                <div class="form-label">Bananas:</div>
+                <span class="val-display" id="val-bananas">3000</span>
+                <input type="range" id="inp-bananas" min="100" max="10000" step="100" value="3000">
+            </div>
+            <div class="form-group">
+                <div class="form-label">Distance:</div>
+                <span class="val-display" id="val-dist">1000</span>
+                <input type="range" id="inp-dist" min="100" max="2000" step="50" value="1000">
+            </div>
+            <div class="form-group">
+                <div class="form-label">Capacity:</div>
+                <span class="val-display" id="val-cap">1000</span>
+                <input type="range" id="inp-cap" min="100" max="2000" step="50" value="1000">
+            </div>
+            <div id="validation-msg" class="validation-msg"></div>
+            <button id="btn-reset" class="btn-outline" style="margin-top: 10px;">🔄 Reset Simulation</button>
+        </div>
+
+        <!-- Info -->
+        <div class="panel info">
+            <h3>📊 Statistics</h3>
+            <div class="stat-large">
+                🍌 <span id="stat-delivered">0</span> Delivered
+            </div>
+            <div class="stat-row">
+                <span>Bananas Remaining:</span>
+                <strong id="stat-desert">3000</strong>
+            </div>
+            <div class="stat-row">
+                <span>Total Mileage:</span>
+                <strong><span id="stat-total-dist">0</span> km</strong>
+            </div>
+            <div class="stat-row">
+                <span>Current Phase:</span>
+                <strong id="stat-cost">—</strong>
+            </div>
+            <div class="stat-row">
+                <span>Progress:</span>
+                <strong>Step <span id="stat-step">0</span> / <span id="stat-total">0</span></strong>
+            </div>
+        </div>
+
+        <!-- Actions -->
+        <div class="panel actions">
+            <h3>🎮 Controls</h3>
+            <div class="actions-grid">
+                <button id="btn-step" class="btn-primary">Step ⏭</button>
+                <button id="btn-auto" class="btn-secondary">Auto Play ▶</button>
+                <button id="btn-stop" class="btn-danger" disabled>Stop ⏸</button>
+                <button id="btn-help" class="btn-info">Help ❓</button>
+            </div>
+            <div class="speed-control">
+                <label for="inp-speed">Animation Speed:</label>
+                <input type="range" id="inp-speed" min="1" max="10" step="1" value="5">
+                <span id="val-speed">5x</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Help Modal -->
+<div id="help-modal" class="modal-overlay">
+    <div class="modal">
+        <h2>🐪 How the Puzzle Works</h2>
+        <p><strong>The Goal:</strong> Transport as many bananas as possible from an <em>Oasis</em> (left) to a <em>Market</em> (right) across the desert.</p>
+
+        <h3>📜 Rules</h3>
+        <ul>
+            <li>The camel eats <strong>1 banana per km</strong> traveled — whether loaded or returning empty.</li>
+            <li>The camel has a limited <strong>carrying capacity</strong>.</li>
+            <li>You can create <strong>depots</strong> along the way to store bananas for later trips.</li>
+        </ul>
+
+        <h3>🧠 Optimal Strategy</h3>
+        <ul>
+            <li>When bananas exceed the capacity, the camel must make <strong>multiple round-trips</strong>.</li>
+            <li>Each phase moves bananas until the total drops to the next multiple of capacity.</li>
+            <li>With <em>n</em> trips needed, each km costs <strong>2n − 1</strong> bananas (n forward + n−1 return trips).</li>
+            <li>Fewer trips per phase = cheaper travel. The final leg needs only <strong>1 trip</strong>.</li>
+        </ul>
+
+        <h3>🎮 Controls</h3>
+        <ul>
+            <li><strong>Step</strong> — Execute one move of the plan.</li>
+            <li><strong>Auto Play</strong> — Animate the full solution automatically.</li>
+            <li><strong>Stop</strong> — Pause auto mode.</li>
+            <li><strong>Reset</strong> — Start over with current settings.</li>
+            <li>Use <strong>sliders</strong> to change bananas, distance, and capacity.</li>
+        </ul>
+
+        <h3>📐 Classic Example</h3>
+        <p>With <strong>3000 bananas</strong>, <strong>1000 km</strong>, capacity <strong>1000</strong>: the optimal delivery is <strong>833 bananas</strong>.</p>
+
+        <button id="btn-close-help" class="btn-primary modal-close-btn">Got it! 👍</button>
+    </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
